@@ -4,10 +4,14 @@ import {
   View,
   TouchableOpacity,
   StatusBar,
+  TextInput,
+  ScrollView,
+  FlatList,
 } from 'react-native';
 import React, {Component} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {FlatGrid} from 'react-native-super-grid';
+import Modal from 'react-native-modal';
 
 export default class Home extends Component {
   constructor(props) {
@@ -43,6 +47,16 @@ export default class Home extends Component {
           totalHarga: 21000,
         },
       ],
+      dataIcon: [
+        {icon: 'user'},
+        {icon: 'store'},
+        {icon: 'store-alt'},
+        {icon: 'user'},
+      ],
+      warungModal: false,
+      namaWarung: '',
+      namaPemilik: '',
+      alamat: '',
     };
   }
   render() {
@@ -68,7 +82,10 @@ export default class Home extends Component {
               Iwan Snack
             </Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              this.setState({warungModal: true});
+            }}>
             <View
               style={{
                 backgroundColor: '#5A74F8',
@@ -122,6 +139,111 @@ export default class Home extends Component {
               </TouchableOpacity>
             )}
           />
+          <Modal isVisible={this.state.warungModal}>
+            <View style={{flex: 1, backgroundColor: '#fff', borderRadius: 5}}>
+              <ScrollView style={{flex: 1}}>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontWeight: 'bold',
+                    marginTop: 10,
+                    fontSize: 16,
+                  }}>
+                  Tambah Warung Baru
+                </Text>
+                <TextInput
+                  value={this.state.namaWarung}
+                  placeholder="Masukkan Nama Warung"
+                  style={{
+                    borderWidth: 1,
+                    marginTop: 10,
+                    marginHorizontal: 10,
+                    borderRadius: 4,
+                    borderColor: '#bdbdbd',
+                    paddingLeft: 10,
+                  }}
+                  onChangeText={text => {
+                    this.setState({namaWarung: text});
+                  }}
+                />
+                <TextInput
+                  value={this.state.namaPemilik}
+                  placeholder="Masukkan Nama Pemilik"
+                  style={{
+                    borderWidth: 1,
+                    marginTop: 10,
+                    marginHorizontal: 10,
+                    borderRadius: 4,
+                    borderColor: '#bdbdbd',
+                    paddingLeft: 10,
+                  }}
+                  onChangeText={text => {
+                    this.setState({namaPemilik: text});
+                  }}
+                />
+                <TextInput
+                  value={this.state.alamat}
+                  placeholder="Masukkan Alamat Warung"
+                  style={{
+                    borderWidth: 1,
+                    marginTop: 10,
+                    marginHorizontal: 10,
+                    borderRadius: 4,
+                    borderColor: '#bdbdbd',
+                    paddingLeft: 10,
+                  }}
+                  onChangeText={text => {
+                    this.setState({alamat: text});
+                  }}
+                />
+                <View style={{marginHorizontal: 10, marginTop: 10}}>
+                  <Text>Pilih Icon Warung</Text>
+                  <FlatList
+                    horizontal
+                    data={this.state.dataIcon}
+                    renderItem={({item}) => (
+                      <View>
+                        <Icon name={item.icon} size={30} color="black" />
+                      </View>
+                    )}
+                  />
+                </View>
+              </ScrollView>
+
+              <View style={{flexDirection: 'row'}}>
+                <TouchableOpacity
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingVertical: 10,
+                    flex: 1,
+                    margin: 5,
+                    elevation: 5,
+                    borderRadius: 10,
+                    backgroundColor: '#fff',
+                    borderWidth: 1,
+                    borderColor: '#5A74F8',
+                  }}
+                  onPress={() => this.setState({warungModal: false})}>
+                  <Text style={{color: '#5A74F8'}}>Batal</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#5A74F8',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    paddingVertical: 10,
+                    flex: 1,
+                    margin: 5,
+                    elevation: 5,
+                    borderRadius: 5,
+                  }}
+                  onPress={() => this.setState({warungModal: false})}>
+                  <Text style={{color: 'white'}}>Selesai</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         </View>
       </View>
     );
