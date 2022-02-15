@@ -212,13 +212,14 @@ export default class Home extends Component {
                   borderRadius: 10,
                   elevation: 2,
                 }}
-                onPress={() => {
+                onLongPress={() => {
                   this.setState({
                     optionWarungModal: true,
                     selectedItem: item,
                     selectedIndex: index,
                   });
-                }}>
+                }}
+                onPressIn={() => this.props.navigation.navigate('Warung')}>
                 <Icon
                   name={item.icon}
                   size={40}
