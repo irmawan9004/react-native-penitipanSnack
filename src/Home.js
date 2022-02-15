@@ -116,7 +116,25 @@ export default class Home extends Component {
     });
   };
 
-  editData = () => {};
+  editData = () => {
+    let data = this.state.data;
+    data[this.state.selectedIndex].namaWarung = this.state.namaWarung;
+    data[this.state.selectedIndex].namaPemilik = this.state.namaPemilik;
+    data[this.state.selectedIndex].alamat = this.state.alamat;
+    data[this.state.selectedIndex].icon = this.state.selectedItemIcon.icon;
+    data[this.state.selectedIndex].color = this.state.selectedItemColor.color;
+    this.setState({data}, () => {
+      this.setState({
+        namaWarung: '',
+        namaPemilik: '',
+        alamat: '',
+        selectedItemIcon: [],
+        selectedItemColor: [],
+        editWarungModal: false,
+        optionWarungModal: false,
+      });
+    });
+  };
   deleteData = () => {
     Alert.alert('Hapus Data?', 'Apakah anda yakin menghapus warung ini?', [
       {
@@ -126,9 +144,16 @@ export default class Home extends Component {
       {
         text: 'Ok',
         style: 'default',
-        onPress: Alert.alert('Berhasil Hapus Data'),
+        onPress: this.fixDeleteData,
       },
     ]);
+  };
+  fixDeleteData = () => {
+    let data = this.state.data;
+    if (this.state.selectedIndex > -1) {
+      data.splice(this.state.selectedIndex, 1);
+    }
+    this.setState({data}, () => this.setState({optionWarungModal: false}));
   };
   render() {
     return (
@@ -422,7 +447,7 @@ export default class Home extends Component {
                   Edit Warung Anda
                 </Text>
                 <TextInput
-                  value={this.state.selectedItem.namaWarung}
+                  value={this.state.namaWarung}
                   placeholder="Masukkan Nama Warung"
                   style={{
                     borderWidth: 1,
@@ -437,7 +462,7 @@ export default class Home extends Component {
                   }}
                 />
                 <TextInput
-                  value={this.state.selectedItem.namaPemilik}
+                  value={this.state.namaPemilik}
                   placeholder="Masukkan Nama Pemilik"
                   style={{
                     borderWidth: 1,
@@ -452,7 +477,7 @@ export default class Home extends Component {
                   }}
                 />
                 <TextInput
-                  value={this.state.selectedItem.alamat}
+                  value={this.state.alamat}
                   placeholder="Masukkan Alamat Warung"
                   style={{
                     borderWidth: 1,
@@ -486,7 +511,9 @@ export default class Home extends Component {
                       <TouchableOpacity
                         style={{
                           borderWidth:
-                            this.state.selectedItem.icon == item.icon ? 1 : 0,
+                            this.state.selectedItemIcon.icon == item.icon
+                              ? 1
+                              : 0,
                           borderColor: '#5A74F8',
                           borderRadius: 4,
                           height: 40,
@@ -500,7 +527,7 @@ export default class Home extends Component {
                           name={item.icon}
                           size={25}
                           color={
-                            this.state.selectedItem.icon == item.icon
+                            this.state.selectedItemIcon.icon == item.icon
                               ? '#5A74F8'
                               : 'grey'
                           }
@@ -524,7 +551,9 @@ export default class Home extends Component {
                       <TouchableOpacity
                         style={{
                           borderWidth:
-                            this.state.selectedItem.color == item.color ? 1 : 0,
+                            this.state.selectedItemColor.color == item.color
+                              ? 1
+                              : 0,
                           borderColor: '#5A74F8',
                           borderRadius: 4,
                           height: 40,
@@ -563,7 +592,7 @@ export default class Home extends Component {
                     borderWidth: 1,
                     borderColor: '#5A74F8',
                   }}
-                  onPress={() => this.setState({warungModal: false})}>
+                  onPress={() => this.setState({editWarungModal: false})}>
                   <Text style={{color: '#5A74F8'}}>Batal</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -577,7 +606,7 @@ export default class Home extends Component {
                     elevation: 5,
                     borderRadius: 5,
                   }}
-                  onPress={this.tambahWarung}>
+                  onPress={this.editData}>
                   <Text style={{color: 'white'}}>Selesai</Text>
                 </TouchableOpacity>
               </View>
@@ -603,7 +632,22 @@ export default class Home extends Component {
                     elevation: 5,
                     borderRadius: 5,
                   }}
-                  onPress={() => this.setState({editWarungModal: true})}>
+                  onPress={() =>
+                    this.setState(
+                      {
+                        editWarungModal: true,
+                        namaWarung: this.state.selectedItem.namaWarung,
+                        namaPemilik: this.state.selectedItem.namaPemilik,
+                        alamat: this.state.selectedItem.alamat,
+                      },
+                      () => {
+                        let selectedItemIcon = {icon: ''};
+                        selectedItemIcon.icon = this.state.selectedItem.icon;
+                        let selectedItemColor = {color: ''};
+                        selectedItemColor.color = this.state.selectedItem.color;
+                      },
+                    )
+                  }>
                   <Text style={{color: 'white'}}>Edit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
